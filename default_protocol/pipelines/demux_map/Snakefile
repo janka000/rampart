@@ -72,14 +72,28 @@ if config.get("minimum_identity"):
 else:
     minimum_identity= ""
 
+if str(config["createSam"]).lower()=="true":
+    sam = config["filename_stem"]
+    if str(config["createBamFromSam"]).lower()=="true":
+        bam_from_sam = config["filename_stem"]
+else:
+    sam = []
+    bam_from_sam = []
+
+
+
 ##### Target rules #####
 
 rule all:
     input:
-        expand(config["output_path"]+ "/{filename_stem}.csv", filename_stem=config["filename_stem"])
-
+        csv = expand(config["output_path"]+ "/{filename_stem}.csv", filename_stem=config["filename_stem"]),
+        sam = expand(config["output_path"]+ "/sam_files/{filename_stem}.sam", filename_stem=sam),
+        bam = expand(config["output_path"]+ "/bam_files/{filename_stem}.bam", filename_stem=bam_from_sam)
+	
 ##### Modules #####
 include: "rules/unzip.smk"
 include: "rules/demultiplex.smk"
 include: "rules/map.smk"
+include: "rules/create_sam.smk"
+include: "rules/create_bam.smk"
 
