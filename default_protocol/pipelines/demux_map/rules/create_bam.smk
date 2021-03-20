@@ -1,11 +1,13 @@
-rule bam_from_sam:
+rule minimap2_samtools_bam:
     input:
-        sam =config["output_path"] +"/sam_files/{filename_stem}.sam",
+        fastq=config["input_path"] + "/{filename_stem}.fastq",
+        ref= config["references_file"]
     output:
-        bam = config["output_path"]+"/bam_files/{filename_stem}.bam"
+        bam = config["output_path"]+"/bam_files/{filename_stem}.bam",
+        bai = config["output_path"]+"/bam_files/{filename_stem}.bam.bai"
     threads: 2
     message:
-        'creating {output.bam:q} from {input.sam:q} (samtools view -S -b {input.sam:q} > {output.bam:q})'
+        "running minimap2 -t 2 -x map-ont -a {input.ref:q} {input.fastq:q} | samtools view -S -b -o - | samtools sort - -o {output.bam:q} && samtools index {output.bam:q}"
     shell:
-        'samtools view -S -b {input.sam:q} > {output.bam:q}'
+        "minimap2 -t 2 -x map-ont -a {input.ref:q} {input.fastq:q} | samtools view -S -b -o - | samtools sort - -o {output.bam:q} && samtools index {output.bam:q}"
         

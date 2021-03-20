@@ -1,0 +1,8 @@
+python3 <path to count_observed_counts.py> <references.fasta> <.bam file> <rampart csv> -o <output file>
+
+script vyrobi jeden vystupny subor, obsahujuci riadok
+[pozicia, barcode, pocet A, C, G, T]
+pre kazdu dvojicu (pozicia, barkod)
+
+example - annotations/base_count/
+python3 ../../modifikovany_askarov_script/count_observed_counts.py ../../protocols_nanocrop/references.fasta ../bam_files/fastq_runid_784dc821cafb065267ca1e03068a1a6a9b3d589d_0_0.bam ../fastq_runid_784dc821cafb065267ca1e03068a1a6a9b3d589d_0_0.csv -o output.txt
