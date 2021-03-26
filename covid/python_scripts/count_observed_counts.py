@@ -3,7 +3,7 @@ import sys
 
 import pysam
 
-from helpers import load_fasta, apply_to_cigartuples, create_barcodes_dict, print_alignments
+from helpers import load_fasta, apply_to_cigartuples, create_barcodes_dict, print_alignments, dump_dict_to_file
 
 letters = "ACGT"
 l2n = {letter: num for num, letter in enumerate(letters)}
@@ -17,11 +17,7 @@ def parse_args(argv):
     parser.add_argument("--alignment_low_cutoff", type=int, default=50)
     return parser.parse_args(argv)
 
-def dump_observed_counts(counts, f):
-    #position, barcode, A, C, G, T
-    for barcode in counts:
-       for position, pos_counts in enumerate(counts[barcode]):
-           print(f"{position+1},{barcode},{pos_counts[0]},{pos_counts[1]},{pos_counts[2]},{pos_counts[3]}", file=f)
+
 
 """
 def dump_observed_counts(counts_by_pos, f):
@@ -98,7 +94,7 @@ def count_observed_counts(reference_filename,
     counts_by_pos, counts_by_barcode_and_pos = count_bases_in_alignment(alignments, reference, alignment_length_low_cutoff, barcodes_dict)
 
     with open(output_filename, "w") as f:
-        dump_observed_counts(counts_by_barcode_and_pos, f)
+        dump_dict_to_file(counts_by_barcode_and_pos, f)
         #dump_observed_counts(counts_by_pos, f)
     #dump_observed_counts_for_barcodes(counts_by_barcode_and_pos, f)
 
