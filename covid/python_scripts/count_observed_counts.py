@@ -1,5 +1,6 @@
 import argparse
 import sys
+import os
 
 import pysam
 
@@ -92,6 +93,11 @@ def count_observed_counts(reference_filename,
     #print(barcodes_dict)
 
     counts_by_pos, counts_by_barcode_and_pos = count_bases_in_alignment(alignments, reference, alignment_length_low_cutoff, barcodes_dict)
+
+    curpath = os.path.abspath(os.curdir)
+    print("Current path is: %s" % (curpath))
+    print("Writing output to: %s" % (os.path.join(curpath, output_filename)))
+
 
     with open(output_filename, "w") as f:
         dump_dict_to_file(counts_by_barcode_and_pos, f)
