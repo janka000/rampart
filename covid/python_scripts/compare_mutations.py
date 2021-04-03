@@ -60,7 +60,7 @@ def load_mutations(mutations_path):
 #def print_to_file(nejaky_argument):
 #    print(nejaky_agrument, file=f)   
     
-def guess(barcode_dict, mutacie, f):
+def guess(barcode_dict, mutacie, csv, txt):
     #barcode dict - nacitany dictionary zo suboru (pocty ACGT na jednotlivych poziciach v jednotlivych barkodoch)
     #mutacie - nejakym sposobom nacitany subor mut.txt
     #print(barcode_dict)
@@ -71,14 +71,17 @@ def guess(barcode_dict, mutacie, f):
             for mut in mutacie[nation][1]:
                 #print(mut)
                 if mut[2].isdigit():
-                    if (barcode_dict[barcode][int(mut[1:len(mut)-2])][l2n[mut[0]]] < barcode_dict[barcode][int(mut[1:len(mut)-2])][l2n[mut[len(mut)-1]]]):
+                    m1 = barcode_dict[barcode][int(mut[1:len(mut)-1])-1][l2n[mut[0]]]
+                    m2 = barcode_dict[barcode][int(mut[1:len(mut)-1])-1][l2n[mut[len(mut)-1]]];
+                    if (m1 < m2):
+                        #print("mutation "+ nation + ", "+mut+" barkod: "+ barcode +" position in barcode_dict[barcode]: "+str(int(mut[1:len(mut)-1])))
                         pocet += 1
-                        support.append([mut, barcode_dict[barcode][int(mut[1:len(mut)-2])][l2n[mut[0]]], barcode_dict[barcode][int(mut[1:len(mut)-2])][l2n[mut[len(mut)-1]]]])
+                        support.append([mut, m1, m2])
             if (pocet > mutacie[nation][0]):
-                print (barcode + " could be " + nation + " mutation")
-                print (str(pocet) + " mutations supports it:" + str(support))
+                print (barcode + " could be " + nation + " mutation", file=txt)
+                print (str(pocet) + " mutations supports it:" + str(support), file=txt)
                 #barcode, mutation, support
-                print(barcode+","+nation+","+str(pocet), file=f)
+                print(barcode+","+nation+","+str(pocet), file=csv)
             
     
               
@@ -90,8 +93,9 @@ def main():
     #mut_number, mutacie = load_mutations(args.mutations)
     mutacie = load_mutations(args.mutations)
     #nazvi_ma_ako_chces(barcode_dict, mut_number, mutacie)
-    with  open(args.output, "w") as f:
-    	guess(barcode_dict, mutacie, f)
+    with  open(args.output+".csv", "w") as csv:
+        with open(args.output+".txt", "w") as txt:
+            guess(barcode_dict, mutacie, csv, txt)
     #with open(args.output, "w") as f: #zapis do suboru
     #    print_to_file("test", f)
     

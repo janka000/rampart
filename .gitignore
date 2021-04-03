@@ -29,6 +29,7 @@ coordinate_reference.fasta
 demuxed/
 annotations/
 binned*
+__pycache__/
 
 # editor configs etc
 *.code-workspace
