@@ -25,7 +25,7 @@ const { setUpPipelines } = require("./pipeline");
 const { modifySamplesAndBarcodes } = require("./modify");
 const { readConfigFile, findConfigFile, assert, setBarcodesFromFile } = require("./helpers");
 
-const DEFAULT_PROTOCOL_PATH = "default_protocol";
+const DEFAULT_PROTOCOL_PATH = "covid_protocol";
 const PROTOCOL_FILENAME= "protocol.json";
 const GENOME_CONFIG_FILENAME= "genome.json";
 const PRIMERS_CONFIG_FILENAME = "primers.json";

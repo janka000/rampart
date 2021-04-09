@@ -24,5 +24,5 @@ POROVNAVANIE MUTACII:
 python3 <path to compare_mutations.py> <csv created by count_observed_counts.py> <references.fasta> <mut.txt> -o <output file>
 
 spustenie v annotations/test/
-python3 ../../python_scripts/compare_mutations.py ../base_count_new/csv.merged  ../../protocols_nanocrop/references.fasta ../../python_scripts/mut.txt -o test.txt
+python3 ../../python_scripts/compare_mutations.py ../base_count_new/csv.merged  ../../protocols_nanocrop/references.fasta ../../python_scripts/mut.txt -o test
 
