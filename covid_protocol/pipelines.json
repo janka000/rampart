@@ -10,6 +10,22 @@
 			}
 		]
 	},
+	"annotation2":{
+		"name": "Additional annotating stuff",
+		"path": "pipelines/run_python_scripts",
+		"config_file": "config.yaml",
+		"requires":[
+			{
+				"file": "references.fasta",
+				"config_key": "references_file"
+			},
+			{
+				"file": "mut.txt",
+				"config_key": "mutations_file"
+			}
+		],
+		"run_per_sample": true
+	},
 	"export_reads": {
 		"name": "Export reads",
 		"path": "pipelines/bin_to_fastq",

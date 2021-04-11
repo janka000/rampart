@@ -92,7 +92,8 @@ rule all:
         csv = expand(config["output_path"]+ "/{filename_stem}.csv", filename_stem=config["filename_stem"]),
         sam = expand(config["output_path"]+ "/sam_files/{filename_stem}.sam", filename_stem=sam),
         bam_from_sam = expand(config["output_path"]+ "/bam_files_from_sam/{filename_stem}.bam", filename_stem=bam_from_sam),
-        bam = expand(config["output_path"]+ "/bam_files/{filename_stem}.bam", filename_stem=bam)
+        bam = expand(config["output_path"]+ "/bam_files/{filename_stem}.bam", filename_stem=bam),
+        base_count = expand(config["output_path"]+ "/base_count/bc_{filename_stem}.csv", filename_stem=config["filename_stem"])
 	
 ##### Modules #####
 include: "rules/unzip.smk"
@@ -101,4 +102,5 @@ include: "rules/map.smk"
 include: "rules/create_sam.smk"
 include: "rules/create_bam.smk"
 include: "rules/create_bam_from_sam.smk"
+include: "rules/count_bases.smk"
 

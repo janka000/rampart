@@ -48,7 +48,7 @@ def main():
     args = parse_args(sys.argv[1:])   
     reference = list(load_fasta(args.reference))[0][1]
     load_files_to_dict(args.directory, reference)
-    with open(args.output, "w") as f:
+    with open(args.output, "w+") as f:
         dump_dict_to_file(merged_dict,f)
     
 if __name__ == "__main__":

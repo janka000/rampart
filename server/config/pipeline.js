@@ -73,7 +73,27 @@ function setUpPipelines(config, args, pathCascade) {
                     },
                     queue: true
                 });
-            } else {
+            } 
+            else if(key == "annotation2"){
+                checkPipeline(config, key, pipeline);
+                if (pipeline.ignore) return;
+                parseRequires(pipeline, config, pathCascade, args)
+                //zatial ignorujem additional options
+                if (config.run.samples.length) {
+                    if (pipeline.configOptions.limit_barcodes_to) {
+                        warn("Overriding your `limit_barcodes_to` options to those set via the barcode-sample mapping.")
+                    }
+                    pipeline.configOptions.limit_barcodes_to = [...getBarcodesInConfig(config)].join(',');
+                    verbose("config", `Limiting barcodes to: ${pipeline.configOptions.limit_barcodes_to}`)
+                }
+                
+                // set up the runner
+                pipelineRunners[key] = new PipelineRunner({
+                    config: pipeline,
+                    queue: true
+                });
+            }
+            else {
                 /* a "normal" / non-annotation pipeline */
                 if (!pipeline.run_per_sample) {
                     /* we currently only use pipelines which are `run_per_sample` */
@@ -154,6 +174,34 @@ function parseAnnotationRequires(pipeline, config, pathCascade, args) {
     }
 }
 
+function parseRequires(pipeline, config, pathCascade, args){
+    if(pipeline.requires){
+        pipeline.requires.forEach((requirement) => {
+
+            let filepath = findConfigFile(pathCascade, requirement.file);
+
+            if (requirement.config_key === 'references_file' && args.referencesPath) {
+                // override the references path if specified on the command line
+                filepath = getAbsolutePath(args.referencesPath, {relativeTo: process.cwd()});
+                ensurePathExists(filepath);
+            }
+
+            requirement.path = filepath;
+
+            if (!filepath) {
+                // throw new Error(`Unable to find required file, ${requirement.file}, for pipeline, '${config.pipelines.annotation.name}'`);
+                fatal(`Unable to find required file, ${requirement.file}, for pipeline, '${config.pipelines.annotation2.name}'\n`);
+            }
+
+            // set this in config.run so the UI can find it.
+            config.run.referencesPanel = filepath;
+
+            // finally, transfer them to the `configOptions`
+            pipeline.configOptions[requirement.config_key] = requirement.path;
+        });
+    }
+}
+
 function checkPipeline(config, key, pipeline, giveWarning = false) {
 
     let message = undefined;
@@ -188,7 +236,7 @@ function checkPipeline(config, key, pipeline, giveWarning = false) {
     }
 
     /* deprecation warnings */
-    if (pipeline.requires && key !== "annotation") {
+    if (pipeline.requires && key !== "annotation" && key!=="annotation2") {
         warn(`The 'requires' property (pipeline "${key}") is not yet supported.`);
         delete pipeline.requires;
     }
