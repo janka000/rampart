@@ -64,6 +64,7 @@ def guess(barcode_dict, mutacie, csv, txt):
     #barcode dict - nacitany dictionary zo suboru (pocty ACGT na jednotlivych poziciach v jednotlivych barkodoch)
     #mutacie - nejakym sposobom nacitany subor mut.txt
     #print(barcode_dict)
+    print("barcode,strand,support", file=csv)
     for barcode in barcode_dict:
         for nation in mutacie:
             pocet = 0

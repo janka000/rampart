@@ -91,13 +91,16 @@ class App extends Component {
     });
     socket.on("data", (response) => {
       console.log("App got new data", response);
-      const { dataPerSample, combinedData} = response;
+      const {dataPerSample, combinedData, variantData} = response;
+      console.log("variantpersample: ", variantData);
       this.setState({
         dataPerSample,
         combinedData,
+        variantData,
         mainPage: "viz",
         timeSinceLastDataUpdate: 0
       });
+      console.log("Set new state with data:", this.state);
     });
     socket.on("config", (newConfig) => {
       console.log("App got new config:", newConfig);

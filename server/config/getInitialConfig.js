@@ -107,7 +107,7 @@ function getInitialConfig(args) {
         log(`Simulating real-time appearance of reads every ${config.run.simulateRealTime} seconds`);
     }
 
-    return {config, pipelineRunners};
+    return {config, pathCascade};
 };
 
 

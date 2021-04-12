@@ -41,7 +41,7 @@ const ContractChart = ({handleClick}) => {
 /**
  * A panel representing an individual sample
  */
-const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelExpanded, setPanelExpanded}) => {
+const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, socket, panelExpanded, setPanelExpanded}) => {
 
   /* -----------    STATE MANAGEMENT    ------------------- */
   const [showSinglePanel, setShowSinglePanel] = useState(false);
@@ -167,6 +167,7 @@ const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelEx
           <InfoRow
             sampleName={sampleName}
             sampleData={sampleData}
+            sampleVariant={sampleVariant}
             sampleColour={sampleColour}
             menuItems={menuItems}
             handleClick={() => setPanelExpanded(sampleName, !panelExpanded)}

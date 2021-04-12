@@ -56,15 +56,7 @@ function setUpPipelines(config, args, pathCascade) {
 
                 parseAnnotationRequires(pipeline, config, pathCascade, args)
                 pipeline.configOptions = mergeAdditionalAnnotationOptions(pipeline.configOptions, config, args);
-                // if any samples have been set (and therefore associated with barcodes) then we limit the run to those barcodes
-                if (config.run.samples.length) {
-                    if (pipeline.configOptions.limit_barcodes_to) {
-                        warn("Overriding your `limit_barcodes_to` options to those set via the barcode-sample mapping.")
-                    }
-                    pipeline.configOptions.limit_barcodes_to = [...getBarcodesInConfig(config)].join(',');
-                    verbose("config", `Limiting barcodes to: ${pipeline.configOptions.limit_barcodes_to}`)
-                }
-                
+               
                 // set up the runner
                 pipelineRunners[key] = new PipelineRunner({
                     config: pipeline,
@@ -74,7 +66,7 @@ function setUpPipelines(config, args, pathCascade) {
                     queue: true
                 });
             } 
-            else if(key == "annotation2"){
+            else if(key == "barcode_strand_match"){
                 checkPipeline(config, key, pipeline);
                 if (pipeline.ignore) return;
                 parseRequires(pipeline, config, pathCascade, args)
@@ -90,6 +82,7 @@ function setUpPipelines(config, args, pathCascade) {
                 // set up the runner
                 pipelineRunners[key] = new PipelineRunner({
                     config: pipeline,
+                    onSuccess: () => {global.NOTIFY_CLIENT_DATA_UPDATED();},
                     queue: true
                 });
             }
@@ -190,7 +183,7 @@ function parseRequires(pipeline, config, pathCascade, args){
 
             if (!filepath) {
                 // throw new Error(`Unable to find required file, ${requirement.file}, for pipeline, '${config.pipelines.annotation.name}'`);
-                fatal(`Unable to find required file, ${requirement.file}, for pipeline, '${config.pipelines.annotation2.name}'\n`);
+                fatal(`Unable to find required file, ${requirement.file}, for pipeline, '${config.pipelines.barcode_strand_match.name}'\n`);
             }
 
             // set this in config.run so the UI can find it.
@@ -236,7 +229,7 @@ function checkPipeline(config, key, pipeline, giveWarning = false) {
     }
 
     /* deprecation warnings */
-    if (pipeline.requires && key !== "annotation" && key!=="annotation2") {
+    if (pipeline.requires && key !== "annotation" && key!=="barcode_strand_match") {
         warn(`The 'requires' property (pipeline "${key}") is not yet supported.`);
         delete pipeline.requires;
     }

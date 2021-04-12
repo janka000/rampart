@@ -10,8 +10,8 @@
 			}
 		]
 	},
-	"annotation2":{
-		"name": "Additional annotating stuff",
+	"barcode_strand_match":{
+		"name": "Match strands to barcodes",
 		"path": "pipelines/run_python_scripts",
 		"config_file": "config.yaml",
 		"requires":[

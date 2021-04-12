@@ -39,6 +39,7 @@ class Renderer extends React.Component {
         this.toggleTheme = () => {
             this.setState({lightMode: !this.state.lightMode});
         }
+
     }
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state !== nextState) return true;
@@ -50,6 +51,7 @@ class Renderer extends React.Component {
           .length;
     }
     render() {
+        console.log("props", this.props);
         return (
             <ThemeProvider theme={{...palette, lightMode: this.state.lightMode}}>
                 <GlobalStyle/>
@@ -70,6 +72,7 @@ class Renderer extends React.Component {
                         (<h1>LOADING</h1>) :
                         (<PanelManager
                                 dataPerSample={this.props.dataPerSample}
+                                variantPerSample={this.props.variantData}
                                 combinedData={this.props.combinedData}
                                 config={this.props.config}
                                 openConfigSidebar={() => this.setSidebarOpenState("config")}

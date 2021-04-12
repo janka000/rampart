@@ -18,8 +18,10 @@ const { timerStart, timerEnd } = require('./timers');
 const { updateWhichReferencesAreDisplayed, updateReferencesSeen } = require("./config/modify");
 const { getBarcodesInConfig } = require("./config/helpers");
 const { UNMAPPED_LABEL } = require("./magics");
-const { verbose, fatal } = require("./utils");
+const { verbose, fatal, warn } = require("./utils");
 const { newSampleColour } = require("./colours");
+const fs = require('fs');
+const dsv = require('d3-dsv');
 
 /**
  * The main store of all annotated data.
@@ -254,6 +256,32 @@ const whichReferencesToDisplay = (dataPerSample, threshold=5, maxNum=10) => {
     return refMatchesAcrossSamples;
 };
 
+
+function getSampleVariants(){
+    let fileToParse = global.config.run.annotatedPath+"results/mutations.csv";
+    const variantData ={};
+    if (!fs.existsSync(fileToParse)) {
+        //warn(`Could not find mutations file, ${fileToParse}, doesn't exist - skipping.`);
+        return variantData;
+    }
+    const variants = dsv.csvParse(fs.readFileSync(fileToParse).toString());
+    variants.forEach((d, index) => {
+        if(!(d.barcode in variants)){
+            variantData[d.barcode]={
+                variantName: d.strand
+            }
+        }
+        else{
+            let prev = variantData[d.barcode].variantName;
+            variantData[d.barcode]={
+                variantName: prev + " or " + d.starnd
+            }
+        }
+    });
+    //console.log(variantData);
+    return variantData; //nemusi obsahovat vsetky barkody...
+}
+
 /**
  * Creates a summary of all data to deliver to the client.
  * @returns {{
@@ -284,8 +312,11 @@ Datastore.prototype.getDataForClient = function() {
         this.filteredDataPerSample :
         this.dataPerSample;
 
+    const vd = getSampleVariants();
+
     /* Part I - summarise each sample (i.e. each sample name, i.e. this.dataPerSample */
     const summarisedData = {};
+    const variantData ={};
     const refMatchesAcrossSamples = whichReferencesToDisplay(dataToVisualise, global.config.display.referenceMapCountThreshold, global.config.display.maxReferencePanelSize);
     for (const [sampleName, sampleData] of Object.entries(dataToVisualise)) {
         summarisedData[sampleName] = {
@@ -302,7 +333,19 @@ Datastore.prototype.getDataForClient = function() {
             /* Following removed as the client no longer uses it - Mar 30 2020 */
             // refMatchSimilarities: sampleData.refMatchSimilarities
         }
+
+        if(sampleName in vd){
+            variantData[sampleName] ={
+                variantName: vd[sampleName].variantName
+            }
+        }
+        else{
+            variantData[sampleName] ={
+                variantName: "not known yet"
+            }
+        }
     }
+    //console.log(variantData);
 
     /* Part II - summarise the overall data, i.e. all samples combined */
     const combinedData = {
@@ -318,7 +361,7 @@ Datastore.prototype.getDataForClient = function() {
     if (!Object.keys(this.dataPerSample).length) {
         return false;
     }
-    return {dataPerSample: summarisedData, combinedData};
+    return {dataPerSample: summarisedData, combinedData, variantData};
 };
 
 

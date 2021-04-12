@@ -23,10 +23,11 @@ async function getCSVs(dir) {
   const dirents = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(dirents.map((dirent) => {
     const res = path.resolve(dir, dirent.name);
-    return dirent.isDirectory() ? getCSVs(res) : res;
+    //return dirent.isDirectory() ? getCSVs(res) : res;
+    return dirent.isDirectory() ? "ignore" : res; //nehladaj csv rekurzivne - lebo tie v subfoldroch nie su tie co hladas.
   }));
   return Array.prototype.concat(...files)
-    .filter((f) => f.endsWith('.csv'));
+    .filter((f) => f.endsWith('.csv')); //"ignore" nekonci .csv -> probelm solved
 }
 
 
