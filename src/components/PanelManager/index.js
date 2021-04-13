@@ -63,6 +63,8 @@ const PanelManager = ({dataPerSample, variantPerSample, combinedData, config, op
         );
     }
 
+    let sorted_keys = Object.keys(dataPerSample).sort();
+
     /* ----------------- R E N D E R ---------------- */
     return (
         <>
@@ -73,7 +75,7 @@ const PanelManager = ({dataPerSample, variantPerSample, combinedData, config, op
                 config={config}
                 goToSamplePanel={goToSamplePanel}
             />
-            {Object.keys(dataPerSample).map((name) => (
+            {sorted_keys.map((name) => (
                 <div key={name} ref={refs.current.get(name)}>
                     <SamplePanel
                         sampleName={name}
