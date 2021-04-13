@@ -352,8 +352,10 @@ Datastore.prototype.getDataForClient = function() {
         processedCount: Object.values((dataToVisualise)).map((d) => d.processedCount).reduce((pv, cv) => pv+cv, 0),
         mappedCount: Object.values((dataToVisualise)).map((d) => d.mappedCount).reduce((pv, cv) => pv+cv, 0),
         readsLastSeen: Math.min(...Object.values(summarisedData).map((d) => d.readsLastSeen)),
-        temporal: summariseOverallTemporalData(summarisedData)
+        temporal: summariseOverallTemporalData(summarisedData),
+        filesSeen: global.filesSeen.size
     };
+    //console.log("datastore", combinedData);
     combinedData.mappedRate = (combinedData.temporal.length > 0 ? combinedData.temporal[combinedData.temporal.length - 1].mappedRate : -1);
 
     timerEnd("getDataForClient");

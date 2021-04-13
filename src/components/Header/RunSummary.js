@@ -16,15 +16,16 @@ import React from 'react';
 import {makeTimeFormatter} from "../../utils/commonFunctions";
 
 const timeFormatter = makeTimeFormatter();
-
 const RunSummary = ({combinedData, timeSinceLastDataUpdate}) => {
+  const fs = combinedData ? combinedData.filesSeen : 0;
+  const num_of_files = " seen " + fs + " files ";
   const readsMsg = combinedData ? `${combinedData.mappedCount} reads mapped | ${combinedData.processedCount} processed ` : "no data yet ";
   const rateMsg = combinedData && combinedData.processedRate >= 0 ?
       `${Math.round(combinedData.processedRate)} reads/sec` : "calculating rate...";
   const lastSeenMsg = timeSinceLastDataUpdate < 5 ?
     "" :
     `| Data last received ${timeFormatter(timeSinceLastDataUpdate)} ago`;
-    return <h3>{`${readsMsg} | ${rateMsg} ${lastSeenMsg}`}</h3>
+    return <h3>{`${readsMsg} | ${num_of_files} | ${rateMsg} ${lastSeenMsg}`}</h3>
   };
 
 export default RunSummary;
