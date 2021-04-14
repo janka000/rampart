@@ -18,7 +18,7 @@ def load_files_to_dict(directory_path, reference):
     print("directory path: ", directory_path)
     for filename in os.listdir(directory_path):
         if filename.endswith(".csv"): 
-            print(os.path.join(directory_path, filename))
+            #print(os.path.join(directory_path, filename))
             load_file(os.path.join(directory_path, filename), reference)
             continue
         else:
@@ -36,7 +36,7 @@ def load_file(file_path, reference):
             G = int(l[4])
             T = int(l[5])
             if not barcode in merged_dict:
-                print("found new barcode! "+barcode)
+                #print("found new barcode! "+barcode)
                 merged_dict[barcode] = [[0 for _ in letters] for _ in reference]
             merged_dict[barcode][position][0]+=A
             merged_dict[barcode][position][1]+=C

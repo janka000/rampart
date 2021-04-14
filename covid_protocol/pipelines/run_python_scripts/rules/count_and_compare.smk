@@ -15,6 +15,7 @@ rule count_and_compare:
     shell:
         """
         mkdir -p {params.out_dir} &&\
-        python3 {params.path_to_script}/compare_mutations.py {input.merged_file:q} {input.ref:q} {input.mut:q} -o {params.output} &&\
-        rm {input.merged_file:q} """
-        
+        python3 {params.path_to_script}/compare_mutations.py {input.merged_file:q} {input.ref:q} {input.mut:q} --threshold 10 -o {params.output} &&\
+        rm {input.merged_file:q}
+        """
+         

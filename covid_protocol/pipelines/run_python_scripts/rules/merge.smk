@@ -13,7 +13,7 @@ rule merge:
         "running csv merge script, base_count_folder is {input.base_count_folder:q}"
     shell:
         """ mv {input.base_count_folder:q} {params.merged_base_count_path} &&\
-        mkdir -p {input.base_count_folder:q} &&\
+         mkdir -p {input.base_count_folder:q} &&\
          python3 {params.path_to_script}/merge_dir.py {params.merged_base_count_path} {input.ref:q} {output.merged_csv} &&\
          rm -rf {params.merged_base_count_path} &&\
          cp {output.merged_csv} {output.csv_merged} """
