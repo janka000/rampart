@@ -49,9 +49,32 @@ export const PostProcessingRunner = ({pipeline, dismissModal, socket, sampleName
     )
 };
 
+export const PostProcessingNotPerSample = ({name, pipelinekey, socket}) => {
+    const send = () => {
+        console.log("triggerProcessingNotPerSample", name)
+        socket.emit('triggerProcessingNotPerSample', {pipelinekey});
+    }
+
+    return (
+        <ModernButton onClick={send}>
+                <>
+                    <IoMdPlay/>
+                    <span>TRIGGER</span>
+                </>
+        </ModernButton>
+    )
+
+};
+
 PostProcessingRunner.propTypes = {
     dismissModal: PropTypes.func.isRequired,
     sampleName: PropTypes.string.isRequired,
     pipeline: PropTypes.object.isRequired,
+    socket: PropTypes.object.isRequired
+};
+
+PostProcessingNotPerSample.propTypes = {
+    name: PropTypes.string.isRequired,
+    pipelinekey: PropTypes.string.isRequired,
     socket: PropTypes.object.isRequired
 };

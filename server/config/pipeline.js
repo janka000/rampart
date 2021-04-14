@@ -70,14 +70,7 @@ function setUpPipelines(config, args, pathCascade) {
                 checkPipeline(config, key, pipeline);
                 if (pipeline.ignore) return;
                 parseRequires(pipeline, config, pathCascade, args)
-                //zatial ignorujem additional options
-                if (config.run.samples.length) {
-                    if (pipeline.configOptions.limit_barcodes_to) {
-                        warn("Overriding your `limit_barcodes_to` options to those set via the barcode-sample mapping.")
-                    }
-                    pipeline.configOptions.limit_barcodes_to = [...getBarcodesInConfig(config)].join(',');
-                    verbose("config", `Limiting barcodes to: ${pipeline.configOptions.limit_barcodes_to}`)
-                }
+                pipeline.configOptions = mergeAdditionalAnnotationOptions(pipeline.configOptions, config, args);
                 
                 // set up the runner
                 pipelineRunners[key] = new PipelineRunner({

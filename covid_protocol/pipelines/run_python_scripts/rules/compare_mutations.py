@@ -80,6 +80,7 @@ def guess(barcode_dict, mutacie, csv, threshold):
                         support.append([mut, m1, m2])
                         if first:
                             mutations_string+=mut
+                            first = False
                         else:
                             mutations_string+="&"+mut
             if (pocet > mutacie[strand][0]):

@@ -22,6 +22,7 @@ const { verbose, fatal, warn } = require("./utils");
 const { newSampleColour } = require("./colours");
 const fs = require('fs');
 const dsv = require('d3-dsv');
+const { array } = require("prop-types");
 
 /**
  * The main store of all annotated data.
@@ -256,6 +257,10 @@ const whichReferencesToDisplay = (dataPerSample, threshold=5, maxNum=10) => {
     return refMatchesAcrossSamples;
 };
 
+function split_mutations(mstring){
+    let arr = mstring.split("&");
+    return arr;
+}
 
 function getSampleVariants(){
     let fileToParse = global.config.run.annotatedPath+"results/mutations.csv";
@@ -268,14 +273,13 @@ function getSampleVariants(){
     variants.forEach((d, index) => {
         if(!(d.barcode in variants)){
             variantData[d.barcode]={
-                variantName: d.strand
+                variantName: d.strand,
+                mutations: split_mutations(d.mutations)
             }
         }
         else{
             let prev = variantData[d.barcode].variantName;
-            variantData[d.barcode]={
-                variantName: prev + " or " + d.starnd
-            }
+            variantData[d.barcode].variantName = prev + " or " + d.starnd; //zatial pre alternativne varianty ignorujem pozicie mutacii
         }
     });
     //console.log(variantData);
@@ -336,12 +340,14 @@ Datastore.prototype.getDataForClient = function() {
 
         if(sampleName in vd){
             variantData[sampleName] ={
-                variantName: vd[sampleName].variantName
+                variantName: vd[sampleName].variantName,
+                mutations: vd[sampleName].mutations
             }
         }
         else{
             variantData[sampleName] ={
-                variantName: "not known yet"
+                variantName: "not known yet",
+                mutations: []
             }
         }
     }

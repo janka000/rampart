@@ -23,8 +23,7 @@
 				"file": "mut.txt",
 				"config_key": "mutations_file"
 			}
-		],
-		"run_per_sample": true
+		]
 	},
 	"export_reads": {
 		"name": "Export reads",
