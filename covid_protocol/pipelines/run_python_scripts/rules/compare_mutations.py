@@ -6,6 +6,13 @@ from helpers import load_fasta, l2n
 
 letters = "ACGT"
 
+class Tree:
+    def __init__(self, name, min_num):
+        self.children = []
+        self.data = []
+        self.name = name
+        self.min_num = min_num
+
 def parse_args(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument("file_path", type=str)
@@ -39,75 +46,96 @@ def load_file(file_path, reference):
 def load_mutations(mutations_path):    
     #nacitanie mut.txt
     
-    mutations = {}
-    sub_mutations = {}
+    mutations = Tree("root", 0)
+    stack = []
+    index = 0
+    stack.append(mutations)
     
     with open (mutations_path, "r") as txtfile:
-        sub = False
         mut_name = ""
+        maybeparent = mutations
         for line in txtfile:
             line = line.strip()
             if line == "start_sub":
-                sub = True
+                stack.append(maybeparent)
+                index += 1
             elif line == "end_sub":
-                sub = False
-            elif sub:
-                columns = line.split(" ")
-                sub_mutations[mut_name].append([])
-                index = len(sub_mutations)-1
-                for i in range (2, len(columns)):
-                    sub_mutations[mut_name][index].append(columns[i])
-                
+                stack.pop()   
+                index -= 1       
             elif not line.startswith('#') and line:
                 columns = line.split(" ")
-                mut_name = columns[0]
-                mutations[mut_name] = []
-                mutations[mut_name].append(int(columns[1]))
-                mutations[mut_name].append([])
+                parent = stack[index]  
+                child = Tree(columns[0], int(columns[1]))
                 for i in range(2, len(columns)):
-                    mutations[mut_name][1].append(columns[i])
-            
+                    child.data.append(columns[i])
+		
+                parent.children.append(child)
+                maybeparent = child            
 
     return mutations
             
+def guess(barcode, threshold, strand):
+    pocet = 0
+    single_muts = [] #mutacie sconcatenovane cez & (budu)
     
-def guess(barcode_dict, mutacie, csv, threshold):
+    for mut in strand.data:
+        #print(mut)
+        if mut[2].isdigit():
+            position = int(mut[1:len(mut)-1])-1
+            
+            #toto treba, inak vyhodi podmienku ze je mimo indexu :|        
+            if position < 0 or position >= len(barcode):
+                continue
+            
+            m1 = barcode[position][l2n[mut[0]]] #pocet baz zhodnych s referenciou
+            m2 = barcode[position][l2n[mut[len(mut)-1]]]; #pocet baz zhodnych s mutaciou
+            reads_coverage = barcode[position][0]+barcode[position][1]+barcode[position][2]+barcode[position][3]
+                   
+            if m1 < m2 and reads_coverage >= threshold: #ak bolo na danu poziciu namapovanych uz aspon threshold baz a je viac tych zmutovanych                         
+                pocet += 1
+                single_muts.append(mut)
+                
+    #ak je to pravdepodobne tato mutacie, zisti pre submutacie, ci sedia nejake
+    if pocet >= strand.min_num:
+        if (len(strand.children) > 0):
+            strands = ""
+            pocet_subov = 0
+            for strandik in strand.children:
+                stran, poc, sinmut = guess(barcode, threshold, strandik)
+                if (stran != ""):
+                    if pocet_subov > 0:
+                        strands += "/"+stran #dalsia vetva submutacii, oddelena cela '/'
+                    else:
+                        strands += stran
+                    pocet_subov += 1
+                    pocet += poc
+                    single_muts += sinmut
+    	    	
+            if pocet_subov > 1:
+                return strand.name + ":" + strands, pocet, single_muts #ak sa to vetvi, da ':'
+            elif pocet_subov > 0:
+                return strand.name + "." + strands, pocet, single_muts #ak sa to nevetvi, deti oddelene ','
+                
+        return strand.name, pocet, single_muts
+    	
+    else:
+    	return "", 0, ""
+    
+def find_variants(barcode_dict, mutacie, csv, threshold):
     #barcode dict - nacitany dictionary zo suboru (pocty ACGT na jednotlivych poziciach v jednotlivych barkodoch)
     #mutacie - nacitany subor mut.txt (load_mutations)
     #print(barcode_dict)
-    print("barcode,strand,support,mutations,probability", file=csv)
+    print("barcode,strand,support,mutations", file=csv)
     for barcode in barcode_dict:
-        for strand in mutacie:
-            probability = 0.0
-            num_mut = 0
-            pocet = 0
-            support = []
-            mutations_string = "" #mutacie sconcatenovane cez &
-            first = True
-            for mut in mutacie[strand][1]:
-                #print(mut)
-                if mut[2].isdigit():
-                    num_mut += 1
-                    position = int(mut[1:len(mut)-1])-1
-                    m1 = barcode_dict[barcode][position][l2n[mut[0]]] #pocet baz zhodnych s referenciou
-                    m2 = barcode_dict[barcode][position][l2n[mut[len(mut)-1]]]; #pocet baz zhodnych s mutaciou
-                    reads_coverage = barcode_dict[barcode][position][0]+barcode_dict[barcode][position][1]+barcode_dict[barcode][position][2]+barcode_dict[barcode][position][3]
-                   
-                    if reads_coverage != 0:
-                    	probability += m2/reads_coverage 
-                    	
-                    if m1 < m2 and reads_coverage >= threshold: #ak bolo na danu poziciu namapovanych uz aspon threshold baz a je viac tych zmutovanych                         
-                        pocet += 1
-                        support.append([mut, m1, m2])
-                        if first:
-                            mutations_string+=mut
-                            first = False
-                        else:
-                            mutations_string+="&"+mut
-            if (pocet > mutacie[strand][0]):
-                print(barcode+","+strand+","+str(pocet)+","+mutations_string+","+str(probability/num_mut), file=csv)
-    
-              
+        for strand in mutacie.children:
+            strands, pocet, single_mut = guess(barcode_dict[barcode], threshold, strand) 
+            
+            if strands == "":
+                continue
+                
+            sinmut = "&".join(single_mut)
+            string = barcode +","+ strands +","+ str(pocet)+","+ sinmut
+            print(string, file=csv)           
             
 def main():
     args = parse_args(sys.argv[1:])   
@@ -116,7 +144,7 @@ def main():
     mutacie = load_mutations(args.mutations)
     threshold = args.threshold
     with  open(args.output+".csv", "w") as csv:
-    	guess(barcode_dict, mutacie, csv, threshold)
+    	find_variants(barcode_dict, mutacie, csv, threshold)
 
     
 if __name__ == "__main__":
