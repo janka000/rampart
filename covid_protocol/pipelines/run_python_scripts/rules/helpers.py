@@ -1,9 +1,30 @@
 import math
+import os
 from collections import defaultdict
 
 letters = "ACGT"
 l2n = {letter: num for num, letter in enumerate(letters)}
 
+def load_dict(file_path, reference):
+    fdict={}
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            for line in f:
+                l = line.split(",")
+                position = int(l[0])-1
+                barcode = l[1]
+                A = int(l[2])
+                C = int(l[3])
+                G = int(l[4])
+                T = int(l[5])
+                if not barcode in fdict:
+                    #print("found new barcode! "+barcode)
+                    fdict[barcode] = [[0 for _ in letters] for _ in reference]
+                fdict[barcode][position][0]+=A
+                fdict[barcode][position][1]+=C
+                fdict[barcode][position][2]+=G
+                fdict[barcode][position][3]+=T 
+    return fdict
 
 def load_fasta(filename: str):
     with open(filename) as f:
