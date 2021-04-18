@@ -1,7 +1,7 @@
 rule count_and_compare:
     input:
         path = config["path"],
-        mut= config["mutations_file"],
+        mut= workflow.current_basedir+"/mut_files/"+config["mutations_file"],
         ref= config["references_file"]
     output:
         csv = config["path"]+"/results/mutations.csv"

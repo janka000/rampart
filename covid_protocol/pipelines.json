@@ -18,10 +18,6 @@
 			{
 				"file": "references.fasta",
 				"config_key": "references_file"
-			},
-			{
-				"file": "mut.txt",
-				"config_key": "mutations_file"
 			}
 		]
 	},
