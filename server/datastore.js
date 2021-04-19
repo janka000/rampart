@@ -263,13 +263,13 @@ function split_mutations(mstring){
 }
 
 function getSampleVariants(){
-    let fileToParse = global.config.run.annotatedPath+"results/mutations.csv";
-    const variantData ={};
+    let fileToParse = global.config.run.annotatedPath+"results/mutations.json";
+    let variantData ={};
     if (!fs.existsSync(fileToParse)) {
         //warn(`Could not find mutations file, ${fileToParse}, doesn't exist - skipping.`);
         return variantData;
-    }
-    const variants = dsv.csvParse(fs.readFileSync(fileToParse).toString());
+    } 
+    /*const variants = dsv.csvParse(fs.readFileSync(fileToParse).toString());
     variants.forEach((d, index) => {
         if(!(d.barcode in variants)){
             variantData[d.barcode]={
@@ -281,7 +281,18 @@ function getSampleVariants(){
             let prev = variantData[d.barcode].variantName;
             variantData[d.barcode].variantName = prev + " or " + d.starnd; //zatial pre alternativne varianty ignorujem pozicie mutacii
         }
-    });
+    });*/
+    let file_content =fs.readFileSync(fileToParse).toString();
+    let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
+    file_content = file_content.replace(regex, '');
+    //console.log(file_content);
+    vData = JSON.parse(file_content);
+
+    for(const barcode of vData){
+        var bc = barcode.barcode;
+        if(bc=="none"){bc="unassigned";}
+        variantData[bc]=barcode.mutations;
+    }
     //console.log(variantData);
     return variantData; //nemusi obsahovat vsetky barkody...
 }
@@ -316,11 +327,10 @@ Datastore.prototype.getDataForClient = function() {
         this.filteredDataPerSample :
         this.dataPerSample;
 
-    const vd = getSampleVariants();
+    const variantData = getSampleVariants();
 
     /* Part I - summarise each sample (i.e. each sample name, i.e. this.dataPerSample */
     const summarisedData = {};
-    const variantData ={};
     const refMatchesAcrossSamples = whichReferencesToDisplay(dataToVisualise, global.config.display.referenceMapCountThreshold, global.config.display.maxReferencePanelSize);
     for (const [sampleName, sampleData] of Object.entries(dataToVisualise)) {
         summarisedData[sampleName] = {
@@ -338,20 +348,15 @@ Datastore.prototype.getDataForClient = function() {
             // refMatchSimilarities: sampleData.refMatchSimilarities
         }
 
-        if(sampleName in vd){
-            variantData[sampleName] ={
-                variantName: vd[sampleName].variantName,
-                mutations: vd[sampleName].mutations
-            }
+        if(!(sampleName in variantData)){
+            variantData[sampleName] =[]
         }
-        else{
-            variantData[sampleName] ={
-                variantName: "not known yet",
-                mutations: []
-            }
-        }
+
     }
+
+
     //console.log(variantData);
+
 
     /* Part II - summarise the overall data, i.e. all samples combined */
     const combinedData = {

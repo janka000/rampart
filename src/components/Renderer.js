@@ -51,7 +51,7 @@ class Renderer extends React.Component {
           .length;
     }
     render() {
-        console.log("props", this.props);
+        //console.log("props", this.props);
         return (
             <ThemeProvider theme={{...palette, lightMode: this.state.lightMode}}>
                 <GlobalStyle/>

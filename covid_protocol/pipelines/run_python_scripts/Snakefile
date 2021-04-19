@@ -13,7 +13,7 @@ config["fastq_path"]=config["basecalled_path"].rstrip("/")
 rule all:
     input:
         path = config["path"],
-        mutations_csv = config["path"]+"/results/mutations.csv"
+        mutations_csv = config["path"]+"/results/mutations.json"
 
 ##### Modules #####
 include: "rules/count_and_compare.smk"
