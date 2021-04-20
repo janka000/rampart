@@ -22,6 +22,7 @@ import { getPostProcessingMenuItems, PostProcessingRunner } from "./postProcessi
 import { IoIosExpand, IoIosContract } from "react-icons/io";
 import { TimerContext } from "../App";
 import SamplePanelContainer, {ChartContainer, ExpandIconContainer} from "./styles";
+import MutationsTree from "../Charts/mutationsTree";
 
 const ExpandChart = ({handleClick}) => {
   return (
@@ -124,7 +125,7 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
             (<ExpandChart handleClick={() => goToChart("coverageOverTime")}/>)
         }
       />
-    )/*,
+    ),/*,
     refSimilarity: (
         <RefSimilarity
             title={"Read mapping similarities"}
@@ -140,6 +141,15 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
         }
         />
     )*/
+    mutationsTree: (
+      <MutationsTree
+       data={sampleVariant}
+       renderProp={ showSinglePanel === "mutationsTree" ?
+            (<ContractChart handleClick={() => goToChart(false)}/>) :
+            (<ExpandChart handleClick={() => goToChart("mutationsTree")}/>)
+        }
+      />
+    )
 
   };
 
@@ -148,7 +158,7 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
     if (!panelExpanded) return null;
     const chartsToShow = showSinglePanel ?
     charts[showSinglePanel] :
-    [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity];
+    [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity, charts.mutationsTree];
     return (
     <ChartContainer>
         {chartsToShow}
