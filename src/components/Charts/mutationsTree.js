@@ -51,7 +51,7 @@ class MutationsTree extends React.Component {
 
     render() {
         return (
-            <Container width="30%" ref="">
+            <Container width="90%" ref="">
                 <Title>
                     {"Mutations tree"}
                 </Title>

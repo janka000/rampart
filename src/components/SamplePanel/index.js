@@ -75,6 +75,13 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
   const sampleColours = {}; /* dataformat needed by <CoveragePlot> */
   sampleColours[sampleName] = sampleColour;
 
+  var variant_name="";
+    for(const variant of sampleVariant){
+      variant_name+=variant.name+" ";
+    }
+
+  const panelExpandedHeight = (variant_name=="") ? "370px" : "740px"; 
+
   /* ------------- MENU OPTIONS -------------------- */
   const menuItems = [];
   menuItems.push(...getPostProcessingMenuItems(config, setPostProcessingState));
@@ -155,10 +162,15 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
 
   /* ---------------   WHAT CHARTS DO WE RENDER?   -------------- */
   const renderCharts = () => {
+  
     if (!panelExpanded) return null;
-    const chartsToShow = showSinglePanel ?
-    charts[showSinglePanel] :
-    [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity, charts.mutationsTree];
+    var chartsToShow =[];
+    if(variant_name!=""){
+      chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity, charts.mutationsTree];
+    }
+    else{
+      chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity];
+    }
     return (
     <ChartContainer>
         {chartsToShow}
@@ -171,6 +183,7 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
     <SamplePanelContainer
       panelExpanded={panelExpanded}
       sampleColour={sampleColour}
+      panelExpandedHeight={panelExpandedHeight}
     > 
       <TimerContext.Consumer>
         {(timeSinceLastDataUpdate) => (

@@ -5,5 +5,5 @@
   "annotationOptions": {
    "require_two_barcodes": "true",
    "barcode_set": "pcr"
-}
+  }
 }

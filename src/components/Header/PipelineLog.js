@@ -45,9 +45,14 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
           }
         </span>
 
+        <h3>{`Pipeline: ${data.get("name")}`}</h3>
+       
+        <span>{status}</span>
+
+
         {status === "running" ? null :
           key === "barcode_strand_match" ? (
-          <span>
+            <span className="rightIcon">
             <PostProcessingNotPerSample 
               name = {data.get("name")}
               pipelinekey = {key}
@@ -56,10 +61,6 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
             </span>
         ) : null 
         }
-
-        <h3>{`Pipeline: ${data.get("name")}`}</h3>
-       
-        <span>{status}</span>
 
 
         {status === "running" ? (
