@@ -1,4 +1,12 @@
-name: artic-rampart
+#environment with fixed porechop for 96 barcodes
+#commands:
+# cd ..../rampart_base_folder
+#conda env create -f environment_porechop_96.yml
+#then in env:
+#npm install
+#npm run build
+#npm install --global 
+name: covid-artic-rampart
 channels:
   - bioconda
   - conda-forge
@@ -12,4 +20,4 @@ dependencies:
   - minimap2=2.17
   - pip:
     - binlorry==1.3.0_alpha1
-    - git+https://github.com/artic-network/Porechop.git@v0.3.2pre
+    - git+https://github.com/janka000/Porechop.git@master
