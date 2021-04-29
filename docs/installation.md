@@ -43,7 +43,7 @@ npm run build
 so that it is available via the `rampart` command
 
 ```bash
-npm install --global .
+npm install --global 
 ```
 
 Check that things work by running `rampart --help`
