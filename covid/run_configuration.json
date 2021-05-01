@@ -1,4 +1,9 @@
 {
-  "title": "covid run",
-  "basecalledPath": "fastq/pass"
+  "title": "SARS-CoV-2",
+  "basecalledPath": "fastq/pass",
+   "annotationOptions": {
+        "require_two_barcodes": "true",
+       "barcode_threshold": 50,
+       "barcode_set": "all"
+   }
 }

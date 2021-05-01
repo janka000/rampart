@@ -4,7 +4,6 @@ The "protocol" is what defines how RAMPART will behave and look.
 It's the primary place where the reference genome(s), primers, analysis pipelines etc are defined.
 For this reason a protocol is typically virus-specific, with the run-specific information overlaid.
 
-**In this version of RAMPART, there are all the files already provided in `/covid_protocol` folder. Those are used by deafult. You can modify them if needed, or you can create your own protocol.**
 
 #### A protocol is composed of 5 JSON files
 
@@ -38,7 +37,7 @@ Each time it finds a matching JSON, it adds it into the overall protocol, overri
 ## Protocol file: `protocol.json`
 
 This JSON format file contains some basic information about the protocol.
-For instance, this is the protocol description for the provided EBOV example:
+For instance, this is the protocol description for the provided SARS-CoV-2 example:
 
 ```json
 {
