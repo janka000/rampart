@@ -80,7 +80,7 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
       variant_name+=variant.name+" ";
     }
 
-  const panelExpandedHeight = (variant_name=="") ? "370px" : "740px"; 
+  const panelExpandedHeight = (variant_name==="") ? "370px" : "740px"; 
 
   /* ------------- MENU OPTIONS -------------------- */
   const menuItems = [];
@@ -165,7 +165,7 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
   
     if (!panelExpanded) return null;
     var chartsToShow =[];
-    if(variant_name!=""){
+    if(variant_name!==""){
       chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity, charts.mutationsTree];
     }
     else{

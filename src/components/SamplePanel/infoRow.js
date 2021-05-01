@@ -55,7 +55,7 @@ const InfoRow = ({sampleName, sampleData, sampleVariant, sampleColour, menuItems
       for(const variant of sampleVariant){
           variant_name+=variant.name+" ";
       }
-      if(variant_name==""){
+      if(variant_name===""){
         variant_name="not known yet";
       }
       summaryText += `| variant:  ${variant_name}`;
