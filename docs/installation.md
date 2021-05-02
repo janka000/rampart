@@ -12,7 +12,7 @@ We also assume that you are using conda -- See [instructions here](https://conda
 (1) Clone the Github repo 
 
 ```bash
-git clone https://github.com/.../covid-rampart.git <!-- todo - doplnit path kde nakoniec bude -->
+git clone https://github.com/fmfi-compbio/rampart.git
 cd rampart
 ```
 
@@ -21,7 +21,7 @@ cd rampart
 *note: we are using a modified version of porechop, where we fixed a bug which caused that in the original version of RAMPART the first 12 barcodes were missing for 96 pcr barcode set*
 
 ```bash
-conda env create -f environment.yml <!-- todo - fix path in environment.yml -->
+conda env create -f environment.yml
 conda activate covid-artic-rampart
 ```
 
