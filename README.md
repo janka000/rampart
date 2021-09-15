@@ -1,3 +1,6 @@
+This repository was a temporary solution we used when we were workig on sars-cov-2 rampart extension before the fmfi-compbio repository was created:
+https://github.com/fmfi-compbio/rampart - fmfi-compbio/rampart completely replaced this repository at the point of time it was created, therefore this one is archived and no longer maintained. 
+
 # RAMPART
 Read Assignment, Mapping, and Phylogenetic Analysis in Real Time.
 
