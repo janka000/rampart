@@ -1,4 +1,4 @@
-fmfi-compbio/rampart repository (https://github.com/fmfi-compbio/rampart) completely replaced this repository at the point of time it was created, therefore this one is archived and no longer maintained. 
+fmfi-compbio/rampart repository ([https://github.com/fmfi-compbio/rampart/tree/SARS-CoV-2_version](https://github.com/fmfi-compbio/rampart/tree/SARS-CoV-2_version)) completely replaced this repository at the point of time it was created, therefore this one is archived and no longer maintained. 
 
 # RAMPART
 Read Assignment, Mapping, and Phylogenetic Analysis in Real Time.
@@ -14,8 +14,6 @@ Time is crucial in outbreak analysis, and recent advancements in sequencing prep
 Furthermore, the small size of many pathogens mean that insightful sequence data is obtained in a matter of minutes.
 RAMPART run concurrently with MinION sequencing of such pathogens.
 It provides a real-time overview of genome coverage and reference matching for each barcode.
-
-This version of RAMPART is designed for ... <!-- #todo -->
 
 ## Documentation
 
